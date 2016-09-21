@@ -30,7 +30,7 @@ public class MusicNoteController : MonoBehaviour {
             spriteRenderer.color = playedNoteColor;
             if(tag != "TrebleClef") {
                 AudioSource.PlayClipAtPoint(note, transform.position);
-                SongManager.addNote(note, Time.realtimeSinceStartup);
+                SongManager.addNote(note, Time.time);
             }
             played = true;
         }
