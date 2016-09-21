@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
     public static void endGame() {
         instance.gameStarted = false;
         UIManager.endGame();
+        SongManager.playSong();
     }
 
     public static bool isGameStarted() {

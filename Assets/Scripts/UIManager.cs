@@ -3,8 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class UIManager : MonoBehaviour {
-
-    public GameObject startingPlatform;
+    
     public Button startButton;
     public GameObject startUI;
 

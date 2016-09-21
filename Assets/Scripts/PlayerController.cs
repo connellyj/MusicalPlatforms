@@ -4,7 +4,6 @@ public class PlayerController : MonoBehaviour {
 
     public Transform groundCheck;
     bool jump = false;
-    bool grounded = false;
     float moveForce = 150f;
     float maxSpeed = 3f;
     float jumpForce = 325f;
@@ -18,8 +17,10 @@ public class PlayerController : MonoBehaviour {
     }
     
     void Update() {
-        //if(GameManager.isGameStarted()) {
-        if (isPlayerOffscreen()) GameManager.endGame();
+        if(GameManager.isGameStarted() && isPlayerOffscreen()) {
+            GameManager.endGame();
+            Destroy(gameObject);
+        }
         RaycastHit2D noteHit = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Note"));
         if(noteHit) {
             if(mostRecentNote != noteHit.transform) {
@@ -33,30 +34,27 @@ public class PlayerController : MonoBehaviour {
         } else {
             unbindTransform();
         }
-        //}
     }
 
     void FixedUpdate() {
-        //if(GameManager.isGameStarted()) {
-            float h = Input.GetAxis("Horizontal");
+        float h = Input.GetAxis("Horizontal");
 
-            if (h < 0.001f && h > -0.001f) {
-                rb2d.velocity = new Vector2(0, rb2d.velocity.y);
-            }
+        if (h < 0.001f && h > -0.001f) {
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+        }
 
-            if (h * rb2d.velocity.x < maxSpeed) {
-                rb2d.AddForce(Vector2.right * h * moveForce);
-            }
+        if (h * rb2d.velocity.x < maxSpeed) {
+            rb2d.AddForce(Vector2.right * h * moveForce);
+        }
 
-            if (Mathf.Abs(rb2d.velocity.x) > maxSpeed) {
-                rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
-            }
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed) {
+            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+        }
 
-            if (jump) {
-                rb2d.AddForce(new Vector2(0f, jumpForce));
-                jump = false;
-            }
-        //}
+        if (jump) {
+            rb2d.AddForce(new Vector2(0f, jumpForce));
+            jump = false;
+        }
     }
 
     bool isPlayerOffscreen() {
