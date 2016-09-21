@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\MusicNoteController.cs" />
     <Compile Include="Assets\Scripts\NoteManager.cs" />
+    <Compile Include="Assets\Scripts\PlatformController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
   </ItemGroup>

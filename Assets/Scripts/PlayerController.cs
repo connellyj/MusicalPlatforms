@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if(GameManager.isGameStarted()) {
+        //if(GameManager.isGameStarted()) {
             float h = Input.GetAxis("Horizontal");
 
             if (h < 0.001f && h > -0.001f) {
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour {
                 rb2d.AddForce(new Vector2(0f, jumpForce));
                 jump = false;
             }
-        }
+        //}
     }
 
     bool isPlayerOffscreen() {
