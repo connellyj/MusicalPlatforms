@@ -6,10 +6,12 @@ public class MusicNoteController : MonoBehaviour {
     public Color playedNoteColor;
     public AudioClip note;
     SpriteRenderer spriteRenderer;
+    bool played;
 
     protected void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playedNoteColor.a = 255;
+        played = false;
         StartCoroutine(moveNote());
     }
 
@@ -24,7 +26,10 @@ public class MusicNoteController : MonoBehaviour {
     }
 
     public void playNote() {
-        spriteRenderer.color = playedNoteColor;
-        if(tag != "TrebleClef") AudioSource.PlayClipAtPoint(note, transform.position);
+        if(!played) {
+            spriteRenderer.color = playedNoteColor;
+            if(tag != "TrebleClef") AudioSource.PlayClipAtPoint(note, transform.position);
+            played = true;
+        }
     }
 }
