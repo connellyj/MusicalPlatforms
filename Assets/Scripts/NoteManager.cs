@@ -13,6 +13,7 @@ public class NoteManager : MonoBehaviour {
 
     void Awake() {
         instance = this;
+        DontDestroyOnLoad(this);
     }
 
     void Start() {

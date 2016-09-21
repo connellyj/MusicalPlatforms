@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     void Awake() {
         gameStarted = false;
         instance = this;
+        DontDestroyOnLoad(this);
     }
 
     public static void startGame() {

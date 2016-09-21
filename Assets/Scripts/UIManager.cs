@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour {
     public Button startButton;
     public GameObject startUI;
     public Text timer;
-    public int levelTime;
+    public float levelTime;
 
     static UIManager instance;
 
@@ -16,14 +16,14 @@ public class UIManager : MonoBehaviour {
 
     void Awake() {
         instance = this;
+        DontDestroyOnLoad(this);
     }
 
     void Start() {
         startButton.onClick.AddListener(() => {
-            StartCoroutine(slideOut(startUI, 3f, -1));
             startingTime = Time.time;
             GameManager.startGame();
-            Destroy(startButton);
+            startUI.SetActive(false);
         });
     }
 
@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour {
         }
     }
 
-    IEnumerator slideOut(GameObject canvasToSlide, float time, int direction) {
+    IEnumerator slideOut(Canvas canvasToSlide, float time, int direction) {
         while(time > 0) {
             foreach(Transform child in canvasToSlide.transform) {
                 child.position += Vector3.right * direction * 10;

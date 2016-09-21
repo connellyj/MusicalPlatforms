@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour {
     void Update() {
         if(GameManager.isGameStarted() && isPlayerOffscreen()) {
             GameManager.endGame();
-            Destroy(gameObject);
         }
         RaycastHit2D noteHit = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Note"));
         if(noteHit) {
