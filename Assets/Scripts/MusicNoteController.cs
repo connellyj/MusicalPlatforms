@@ -3,15 +3,14 @@ using System.Collections;
 
 public class MusicNoteController : MonoBehaviour {
 
-    public Color playedNoteColor;
+    Color[] playedNoteColors;
     public AudioClip note;
     SpriteRenderer spriteRenderer;
-    bool played;
+    int timesPlayed;
 
     protected void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        playedNoteColor.a = 255;
-        played = false;
+        playedNoteColors = NoteManager.getPlayedColors();
         StartCoroutine(moveNote());
     }
 
@@ -26,13 +25,11 @@ public class MusicNoteController : MonoBehaviour {
     }
 
     public void playNote() {
-        if(!played) {
-            spriteRenderer.color = playedNoteColor;
-            if(tag != "TrebleClef") {
-                AudioSource.PlayClipAtPoint(note, transform.position);
-                SongManager.addNote(note, Time.time);
-            }
-            played = true;
+        spriteRenderer.color = playedNoteColors[timesPlayed % playedNoteColors.Length];
+        timesPlayed++;
+        if(tag != "TrebleClef") {
+            AudioSource.PlayClipAtPoint(note, transform.position);
+            SongManager.addNote(note, Time.time);
         }
     }
 }

@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour {
             if(mostRecentNote != noteHit.transform) {
                 bindTransform(noteHit.transform);
                 noteHit.transform.gameObject.GetComponent<MusicNoteController>().playNote();
-                mostRecentNote = noteHit.transform;
             }
             if(Input.GetKeyDown(KeyCode.Space)) {
                 jump = true;
@@ -34,6 +33,7 @@ public class PlayerController : MonoBehaviour {
         } else {
             unbindTransform();
         }
+        mostRecentNote = noteHit.transform;
     }
 
     void FixedUpdate() {

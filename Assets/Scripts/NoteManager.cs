@@ -9,6 +9,7 @@ public class NoteManager : MonoBehaviour {
     public GameObject[] musicNotes;
     public GameObject player;
     public GameObject groundCheck;
+    public Color[] playedNoteColors;
 
     void Awake() {
         instance = this;
@@ -35,5 +36,9 @@ public class NoteManager : MonoBehaviour {
 
     public static float getNoteSpeed() {
         return instance.noteSpeed;
+    }
+
+    public static Color[] getPlayedColors() {
+        return instance.playedNoteColors;
     }
 }

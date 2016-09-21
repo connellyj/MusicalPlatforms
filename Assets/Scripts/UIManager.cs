@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour {
     public Button startButton;
     public GameObject startUI;
     public Text timer;
+    public int levelTime;
 
     static UIManager instance;
 
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour {
 
     void Update() {
         if(GameManager.isGameStarted()) {
-            timeDisplayed = Mathf.Round(5 - (Time.time - startingTime));
+            timeDisplayed = Mathf.Round(levelTime - (Time.time - startingTime));
             if(timeDisplayed == 0) GameManager.endGame();
             timer.text = timeDisplayed.ToString();
         }
