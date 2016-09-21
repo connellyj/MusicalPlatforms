@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//PLAY AGAIN WITH PREVIOUS AUDIO IN BACKGROUND
-//ADD AN OPTIONAL/UP BEAT
-//ONLY PLAY NOTE ONCE, CHANGES TO BLACK AGAIN AFTER A SECOND OR 2
-//CANVAS SLIDING SHOULD BE ABLE TO TAKE A TIME AND DESTROY THE CANVAS ONCE OFFSCREEN
-
 public class NoteManager : MonoBehaviour {
 
     static NoteManager instance;
@@ -40,13 +35,5 @@ public class NoteManager : MonoBehaviour {
 
     public static float getNoteSpeed() {
         return instance.noteSpeed;
-    }
-
-    public static bool activateNote(GameObject note) {
-        if (Physics2D.Linecast(instance.player.transform.position, instance.groundCheck.transform.position, 1 << LayerMask.NameToLayer("Note"))) {
-            instance.player.transform.parent = note.transform;
-            return true;
-        }
-        return false;
     }
 }

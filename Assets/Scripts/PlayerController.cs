@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
     float jumpForce = 325f;
     Rigidbody2D rb2d;
     Renderer playerRenderer;
+    Transform mostRecentNote;
 
     void Awake() {
         rb2d = GetComponent<Rigidbody2D>();
@@ -17,11 +18,22 @@ public class PlayerController : MonoBehaviour {
     }
     
     void Update() {
-        if(GameManager.isGameStarted()) {
-            if (isPlayerOffscreen()) GameManager.endGame();
-            grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Note"));
-            if (Input.GetKeyDown(KeyCode.Space) && grounded) jump = true;
+        //if(GameManager.isGameStarted()) {
+        if (isPlayerOffscreen()) GameManager.endGame();
+        RaycastHit2D noteHit = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Note"));
+        if(noteHit) {
+            if(mostRecentNote != noteHit.transform) {
+                bindTransform(noteHit.transform);
+                noteHit.transform.gameObject.GetComponent<MusicNoteController>().playNote();
+                mostRecentNote = noteHit.transform;
+            }
+            if(Input.GetKeyDown(KeyCode.Space)) {
+                jump = true;
+            }
+        } else {
+            unbindTransform();
         }
+        //}
     }
 
     void FixedUpdate() {
@@ -50,5 +62,13 @@ public class PlayerController : MonoBehaviour {
     bool isPlayerOffscreen() {
         if (playerRenderer.isVisible) return false;
         return true;
+    }
+
+    void bindTransform(Transform objectToBindTo) {
+        transform.parent = objectToBindTo;
+    }
+
+    void unbindTransform() {
+        transform.parent = null;
     }
 }

@@ -8,16 +8,10 @@ public class UIManager : MonoBehaviour {
     public Button startButton;
     public GameObject startUI;
 
-    static UIManager instance;
-
-    void Awake() {
-        instance = this;
-    }
-
     void Start() {
         startButton.onClick.AddListener(() => {
             StartCoroutine(slideOut(startUI, 3f, -1));
-            Destroy(startingPlatform);
+            GameManager.startGame();
         });
     }
 

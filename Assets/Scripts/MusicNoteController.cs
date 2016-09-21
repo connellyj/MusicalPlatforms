@@ -7,7 +7,7 @@ public class MusicNoteController : MonoBehaviour {
     public AudioClip note;
     SpriteRenderer spriteRenderer;
 
-    void Start() {
+    protected void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playedNoteColor.a = 255;
         StartCoroutine(moveNote());
@@ -23,20 +23,8 @@ public class MusicNoteController : MonoBehaviour {
         }
     }
 
-    void OnCollisionStay2D(Collision2D other) {
-        if(other.gameObject.tag == "Player") {
-            if (tag == "TrebleClef") {
-                NoteManager.activateNote(gameObject);
-                GameManager.startGame();
-            }
-            else if(NoteManager.activateNote(gameObject)) {
-                spriteRenderer.color = playedNoteColor;
-                AudioSource.PlayClipAtPoint(note, transform.position);
-            }
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D other) {
-        if (other.gameObject.tag == "Player") other.transform.parent = null;
+    public void playNote() {
+        spriteRenderer.color = playedNoteColor;
+        if(tag != "TrebleClef") AudioSource.PlayClipAtPoint(note, transform.position);
     }
 }
