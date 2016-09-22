@@ -4,9 +4,11 @@ public class PlayerController : MonoBehaviour {
 
     public Transform groundCheck;
     bool jump = false;
+    bool babyJump = false;
     float moveForce = 150f;
     float maxSpeed = 3f;
     float jumpForce = 325f;
+    float babyJumpForce = 105f;
     Rigidbody2D rb2d;
     Renderer playerRenderer;
     Transform mostRecentNote;
@@ -27,7 +29,8 @@ public class PlayerController : MonoBehaviour {
                 noteHit.transform.gameObject.GetComponent<MusicNoteController>().playNote();
             }
             if(Input.GetKeyDown(KeyCode.Space)) {
-                jump = true;
+                if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) babyJump = true;
+                else jump = true;
             }
         } else {
             unbindTransform();
@@ -54,6 +57,11 @@ public class PlayerController : MonoBehaviour {
             if (jump) {
                 rb2d.AddForce(new Vector2(0f, jumpForce));
                 jump = false;
+            }
+
+            if(babyJump) {
+                rb2d.AddForce(new Vector2(0f, babyJumpForce));
+                babyJump = false;
             }
         }
 

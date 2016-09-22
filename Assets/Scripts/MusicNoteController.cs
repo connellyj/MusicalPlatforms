@@ -15,10 +15,11 @@ public class MusicNoteController : MonoBehaviour {
     }
 
     IEnumerator moveNote() {
+        float offscreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).x - 2;
         while(true) {
             if(GameManager.isGameStarted()) {
                 transform.position += Vector3.left * NoteManager.getNoteSpeed();
-                if (transform.position.x < Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).x - 2) Destroy(gameObject);
+                if (transform.position.x < offscreen) Destroy(gameObject);
             }
             yield return new WaitForSeconds(1 / 40);
         }

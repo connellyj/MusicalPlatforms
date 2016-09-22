@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour {
         startButton.onClick.AddListener(() => {
             startingTime = Time.time;
             GameManager.startGame();
-            startUI.SetActive(false);
+            StartCoroutine(slideOut(startUI, 8f, -1));
         });
     }
 
@@ -35,11 +35,10 @@ public class UIManager : MonoBehaviour {
         }
     }
 
-    IEnumerator slideOut(Canvas canvasToSlide, float time, int direction) {
-        while(time > 0) {
-            foreach(Transform child in canvasToSlide.transform) {
-                child.position += Vector3.right * direction * 10;
-            }
+    IEnumerator slideOut(GameObject objectToSlide, float speed, int direction) {
+        float offscreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).x - 250;
+        while(objectToSlide.transform.position.x > offscreen) {
+            objectToSlide.transform.position += Vector3.right * direction * speed;
             yield return new WaitForSeconds(1/60);
         }
     }
