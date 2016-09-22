@@ -16,25 +16,19 @@ public class UIManager : MonoBehaviour {
     float timeDisplayed;
 
     void Awake() {
+        instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start() {
-        startButton.onClick.AddListener(() => {
-            startingTime = Time.time;
-            StartCoroutine(slideOut(startUI, 8f, -1));
-        });
-    }
-
     void Update() {
-        if(GameManager.isGameStarted()) {
+        if(GameManager.isGamePlaying()) {
             pauseMenu.SetActive(false);
             timeDisplayed = Mathf.Round(levelTime - (Time.time - startingTime));
-            if(timeDisplayed == 0) GameManager.endGame();
+            if(timeDisplayed == 0) GameManager.pause();
             timer.text = timeDisplayed.ToString();
         }
         if(Input.GetKeyDown(KeyCode.Escape)) {
-            GameManager.endGame();
+            GameManager.pause();
             pauseMenu.SetActive(true);
         }
     }
@@ -45,6 +39,11 @@ public class UIManager : MonoBehaviour {
             objectToSlide.transform.position += Vector3.right * direction * speed;
             yield return new WaitForSeconds(1/60);
         }
+    }
+
+    public static void startGame() {
+        instance.startingTime = Time.time;
+        instance.StartCoroutine(instance.slideOut(instance.startUI, 8f, -1));
     }
 
     public static void endGame() {

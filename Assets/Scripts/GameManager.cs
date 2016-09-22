@@ -4,26 +4,35 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
     static GameManager instance;
-    bool gameStarted;
+    bool gamePlaying;
 
     void Awake() {
-        gameStarted = false;
+        gamePlaying = false;
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
     public void startGame() {
-        gameStarted = true;
+        UIManager.startGame();
+        gamePlaying = true;
+    }
+
+    public void unPauseGame() {
+        gamePlaying = true;
+    }
+
+    public static void pause() {
+        instance.gamePlaying = false;
     }
 
     public static void endGame() {
-        instance.gameStarted = false;
+        instance.gamePlaying = false;
         UIManager.endGame();
         SongManager.playSong();
     }
 
-    public static bool isGameStarted() {
-        return instance.gameStarted;
+    public static bool isGamePlaying() {
+        return instance.gamePlaying;
     }
 
     public void restart() {

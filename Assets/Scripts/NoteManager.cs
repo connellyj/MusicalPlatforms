@@ -24,7 +24,7 @@ public class NoteManager : MonoBehaviour {
         System.Random intGenerator = new System.Random();
         int randomNoteIndex = 0;
         while (true) {
-            if (GameManager.isGameStarted()) {
+            if (GameManager.isGamePlaying()) {
                 randomNoteIndex = intGenerator.Next(0, musicNotes.Length - 1);
                 while (randomNoteIndex < musicNotes.Length) {
                     Instantiate(musicNotes[randomNoteIndex]);

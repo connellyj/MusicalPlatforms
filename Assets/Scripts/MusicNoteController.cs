@@ -17,7 +17,7 @@ public class MusicNoteController : MonoBehaviour {
     IEnumerator moveNote() {
         float offscreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).x - 2;
         while(true) {
-            if(GameManager.isGameStarted()) {
+            if(GameManager.isGamePlaying()) {
                 transform.position += Vector3.left * NoteManager.getNoteSpeed();
                 if (transform.position.x < offscreen) Destroy(gameObject);
             }
