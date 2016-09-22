@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour {
         if(GameManager.isGameStarted() && isPlayerOffscreen()) {
             GameManager.endGame();
         }
+        if(!GameManager.isGameStarted()) {
+            rb2d.Sleep();
+        }
         RaycastHit2D noteHit = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Note"));
         if(noteHit) {
             if(mostRecentNote != noteHit.transform) {

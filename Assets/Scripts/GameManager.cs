@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -8,11 +9,11 @@ public class GameManager : MonoBehaviour {
     void Awake() {
         gameStarted = false;
         instance = this;
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
     }
 
-    public static void startGame() {
-        instance.gameStarted = true;
+    public void startGame() {
+        gameStarted = true;
     }
 
     public static void endGame() {
@@ -23,5 +24,9 @@ public class GameManager : MonoBehaviour {
 
     public static bool isGameStarted() {
         return instance.gameStarted;
+    }
+
+    public void restart() {
+        SceneManager.LoadScene(0);
     }
 }

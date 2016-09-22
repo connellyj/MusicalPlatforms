@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour {
     
     public Button startButton;
     public GameObject startUI;
+    public GameObject pauseMenu;
     public Text timer;
     public float levelTime;
 
@@ -15,23 +16,26 @@ public class UIManager : MonoBehaviour {
     float timeDisplayed;
 
     void Awake() {
-        instance = this;
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start() {
         startButton.onClick.AddListener(() => {
             startingTime = Time.time;
-            GameManager.startGame();
             StartCoroutine(slideOut(startUI, 8f, -1));
         });
     }
 
     void Update() {
         if(GameManager.isGameStarted()) {
+            pauseMenu.SetActive(false);
             timeDisplayed = Mathf.Round(levelTime - (Time.time - startingTime));
             if(timeDisplayed == 0) GameManager.endGame();
             timer.text = timeDisplayed.ToString();
+        }
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            GameManager.endGame();
+            pauseMenu.SetActive(true);
         }
     }
 
