@@ -1,25 +1,40 @@
-﻿using UnityEngine;
+﻿/**
+ * Written by Julia Connelly, 9/28/2016
+ * 
+ * Spawns notes ands stores information relevant to all notes
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class NoteManager : MonoBehaviour {
 
-    static NoteManager instance;
     public float noteSpeed;
     public float distanceBetweenNotes;
+
     public GameObject[] musicNotes;
     public GameObject player;
     public GameObject groundCheck;
     public Color[] playedNoteColors;
+
+    static NoteManager instance;
+
+
 
     void Awake() {
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
+
+
     void Start() {
         StartCoroutine(spawnNotes());
     }
 
+
+
+    // Creates notes randomly
     IEnumerator spawnNotes() {
         System.Random intGenerator = new System.Random();
         int randomNoteIndex = 0;
@@ -35,10 +50,16 @@ public class NoteManager : MonoBehaviour {
         }
     }
 
+
+
+    // Note speed for all the notes
     public static float getNoteSpeed() {
         return instance.noteSpeed;
     }
 
+
+
+    // Played colors for all the notes
     public static Color[] getPlayedColors() {
         return instance.playedNoteColors;
     }
