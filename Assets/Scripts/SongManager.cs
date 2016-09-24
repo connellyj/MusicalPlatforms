@@ -18,8 +18,13 @@ public class SongManager : MonoBehaviour {
 
 
     void Awake() {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        if(instance == null) {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else if(instance != this) {
+            Destroy(gameObject);
+            return;
+        }
     }
 
 
@@ -42,8 +47,8 @@ public class SongManager : MonoBehaviour {
 
 
     // Starts playing the song
-    public static void playSong() {
-        instance.StartCoroutine(instance.startSong());
+    public void playSong() {
+        StartCoroutine(startSong());
     }
 
 

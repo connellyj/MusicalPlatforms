@@ -9,9 +9,10 @@ using System.Collections;
 
 public class MusicNoteController : MonoBehaviour {
 
-    public AudioClip note;
+    public AudioClip[] notes;
 
     int timesPlayed;
+    int instrumentIndex;
 
     Color[] playedNoteColors;
     SpriteRenderer spriteRenderer;
@@ -21,6 +22,7 @@ public class MusicNoteController : MonoBehaviour {
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playedNoteColors = NoteManager.getPlayedColors();
+        instrumentIndex = NoteManager.getInstrumentIndex();
         StartCoroutine(moveNote());
     }
 
@@ -34,7 +36,6 @@ public class MusicNoteController : MonoBehaviour {
                 transform.position += Vector3.left * NoteManager.getNoteSpeed();
                 if(transform.position.x < offscreen) {
                     Destroy(gameObject);
-                    StopAllCoroutines();
                 }
             }
             yield return new WaitForSeconds(1 / 40);
@@ -48,8 +49,8 @@ public class MusicNoteController : MonoBehaviour {
         spriteRenderer.color = playedNoteColors[timesPlayed % playedNoteColors.Length];
         timesPlayed++;
         if(tag != "TrebleClef") {
-            AudioSource.PlayClipAtPoint(note, transform.position);
-            SongManager.addNote(note, Time.time);
+            AudioSource.PlayClipAtPoint(notes[instrumentIndex], transform.position);
+            SongManager.addNote(notes[instrumentIndex], Time.time);
         }
     }
 }

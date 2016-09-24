@@ -17,14 +17,14 @@ public class PlayerController : MonoBehaviour {
     float maxSpeed = 3f;
     float jumpForce = 325f;
     float babyJumpForce = 105f;
-
+    
     Rigidbody2D playerRigidbody;
     Renderer playerRenderer;
     Transform mostRecentNote;
 
 
 
-    void Awake() {
+    void Start() {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerRenderer = GetComponent<Renderer>();
     }
@@ -34,8 +34,8 @@ public class PlayerController : MonoBehaviour {
     void Update() {
         if(!GameManager.isGamePlaying()) playerRigidbody.Sleep();
         else {
-            if(isPlayerOffscreen()) GameManager.endGame();
-            else {
+            //if(isPlayerOffscreen()) GameManager.endGame(false);
+            //else {
                 RaycastHit2D noteHit = checkIfOnNote();
                 if(noteHit) {
                     if(mostRecentNote != noteHit.transform) {
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour {
                     unbindTransform();
                 }
                 mostRecentNote = noteHit.transform;
-            }
+            //}
         }
     }
 
@@ -106,8 +106,10 @@ public class PlayerController : MonoBehaviour {
     // Checks for jump input
     void setJumpStatus() {
         if(Input.GetKeyDown(KeyCode.Space)) {
-            if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) babyJump = true;
-            else jump = true;
+            babyJump = true;
+        }
+        if(Input.GetKeyDown(KeyCode.UpArrow)) {
+            jump = true;
         }
     }
 

@@ -13,22 +13,28 @@ public class NoteManager : MonoBehaviour {
     public float distanceBetweenNotes;
 
     public GameObject[] musicNotes;
-    public GameObject player;
-    public GameObject groundCheck;
     public Color[] playedNoteColors;
 
     static NoteManager instance;
 
+    int instrumentIndex;
+
 
 
     void Awake() {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        if(instance == null) {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else if(instance != this) {
+            Destroy(gameObject);
+            return;
+        }
     }
 
 
 
     void Start() {
+        instrumentIndex = 0;
         StartCoroutine(spawnNotes());
     }
 
@@ -62,5 +68,17 @@ public class NoteManager : MonoBehaviour {
     // Played colors for all the notes
     public static Color[] getPlayedColors() {
         return instance.playedNoteColors;
+    }
+
+
+
+    public static int getInstrumentIndex() {
+        return instance.instrumentIndex;
+    }
+
+
+
+    public static void proceedToNextLevel() {
+        instance.instrumentIndex++;
     }
 }
