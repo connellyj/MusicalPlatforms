@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     bool jump;
     bool babyJump;
     bool seenByCamera;
+    bool facingRight;
 
     float moveForce = 150f;
     float maxSpeed = 3f;
@@ -20,14 +21,14 @@ public class PlayerController : MonoBehaviour {
     float babyJumpForce = 105f;
     
     Rigidbody2D playerRigidbody;
-    Renderer playerRenderer;
+    SpriteRenderer playerRenderer;
     Transform mostRecentNote;
 
 
 
     void Start() {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        playerRenderer = GetComponent<Renderer>();
+        playerRenderer = GetComponent<SpriteRenderer>();
         jump = false;
         babyJump = false;
         seenByCamera = false;
@@ -87,7 +88,24 @@ public class PlayerController : MonoBehaviour {
                 playerRigidbody.AddForce(new Vector2(0f, babyJumpForce));
                 babyJump = false;
             }
+
+            if(h > 0 && !facingRight) {
+                flip();
+            }
+
+            if(h < 0 && facingRight) {
+                flip();
+            }
         }
+    }
+
+
+
+    void flip() {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
 
