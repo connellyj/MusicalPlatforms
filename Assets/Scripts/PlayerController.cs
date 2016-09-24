@@ -10,8 +10,9 @@ public class PlayerController : MonoBehaviour {
     
     public Transform groundCheck;
 
-    bool jump = false;
-    bool babyJump = false;
+    bool jump;
+    bool babyJump;
+    bool seenByCamera;
 
     float moveForce = 150f;
     float maxSpeed = 3f;
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerRenderer = GetComponent<Renderer>();
+        jump = false;
+        babyJump = false;
+        seenByCamera = false;
     }
     
 
@@ -34,8 +38,8 @@ public class PlayerController : MonoBehaviour {
     void Update() {
         if(!GameManager.isGamePlaying()) playerRigidbody.Sleep();
         else {
-            //if(isPlayerOffscreen()) GameManager.endGame(false);
-            //else {
+            if(isPlayerOffscreen()) GameManager.endGame(false);
+            else {
                 RaycastHit2D noteHit = checkIfOnNote();
                 if(noteHit) {
                     if(mostRecentNote != noteHit.transform) {
@@ -46,7 +50,7 @@ public class PlayerController : MonoBehaviour {
                     unbindTransform();
                 }
                 mostRecentNote = noteHit.transform;
-            //}
+            }
         }
     }
 
@@ -117,7 +121,10 @@ public class PlayerController : MonoBehaviour {
 
     // Checks if the player is offscreen
     bool isPlayerOffscreen() {
-        if (playerRenderer.isVisible) return false;
+        if(playerRenderer.isVisible) {
+            if(!seenByCamera) seenByCamera = true;
+            return false;
+        } else if(!seenByCamera) return false;
         return true;
     }
 
