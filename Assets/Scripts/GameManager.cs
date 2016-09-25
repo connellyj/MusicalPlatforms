@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
     public GameObject failUI;
     public GameObject pauseMenu;
     public GameObject freePlayUI;
+    public Text winMessage;
     public Button nextLevelButton;
     public Button pianoButton;
     public Button violinButton;
@@ -154,6 +155,7 @@ public class GameManager : MonoBehaviour {
             instance.successUI.SetActive(true);
             if(instance.curLevel >= instance.numLevels - 1) {
                 instance.nextLevelButton.gameObject.SetActive(false);
+                instance.winMessage.text = "You win!";
             }else {
                 instance.nextLevelButton.gameObject.SetActive(true);
             }
