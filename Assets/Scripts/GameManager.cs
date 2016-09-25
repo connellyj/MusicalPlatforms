@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     public int numLevels;
     public GameObject successUI;
     public GameObject failUI;
+    public GameObject pauseMenu;
     public Button nextLevelButton;
 
     static GameManager instance;
@@ -73,7 +74,7 @@ public class GameManager : MonoBehaviour {
 
 
 
-    public void startGame() {
+    public static void startGame() {
         SceneManager.LoadScene("Main");
     }
 
@@ -81,12 +82,14 @@ public class GameManager : MonoBehaviour {
 
     public void unPauseGame() {
         gamePlaying = true;
+        pauseMenu.SetActive(false);
     }
 
 
 
-    public static void pause() {
-        instance.gamePlaying = false;
+    public void pause() {
+        gamePlaying = false;
+        pauseMenu.SetActive(true);
     }
 
 
@@ -110,7 +113,7 @@ public class GameManager : MonoBehaviour {
 
 
     public void restart() {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("StartScreen");
         deactivateUI();
     }
 
@@ -123,14 +126,14 @@ public class GameManager : MonoBehaviour {
 
 
 
-    public void exitGame() {
+    public static void exitGame() {
         Application.Quit();
     }
 
 
 
-    public void startFreePlay() {
-        freePlay = true;
+    public static void startFreePlay() {
+        instance.freePlay = true;
         startGame();
     }
 
@@ -147,5 +150,6 @@ public class GameManager : MonoBehaviour {
     static void deactivateUI() {
         instance.successUI.SetActive(false);
         instance.failUI.SetActive(false);
+        instance.pauseMenu.SetActive(false);
     }
 }
