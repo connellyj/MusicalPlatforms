@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Makes sure there is only one GameManager in each scene
     void Awake() {
         if(instance == null) {
             instance = this;
@@ -53,13 +54,13 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Gets called when a scene is finished loading
+    // Initializes things for the level
     void onSceneLoad(Scene loadedScene, LoadSceneMode loadSceneMode) {
         if(loadedScene.name == "Main") {
-            timeText = FindObjectOfType<Text>();
-            startTime = Time.time;
+            initTime();
+            initSong();
             gamePlaying = true;
-            SongManager.addStartTime(startTime);
-            SongManager.playSongsDuringLevel();
         }
     }
 
@@ -72,6 +73,23 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Initializes the song for the level
+    void initSong() {
+        SongManager.addStartTime(startTime);
+        SongManager.playSongsDuringLevel();
+    }
+
+
+
+    // Initializes the time for the level
+    void initTime() {
+        timeText = FindObjectOfType<Text>();
+        startTime = Time.time;
+    }
+
+
+
+    // Updates the time text and ends the game if it's zero
     void updateTime() {
         timeDisplayed = Mathf.Round(levelTime - (Time.time - startTime));
         if(timeDisplayed == 0) endGame(true);
@@ -80,12 +98,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Loads the game scene
     public static void startGame() {
         SceneManager.LoadScene("Main");
     }
 
 
 
+    // Unpauses the game by updating the time and hiding the pause menu
     public void unPauseGame() {
         gamePlaying = true;
         timePaused = Time.time - timePaused;
@@ -95,6 +115,7 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Brings up the pause menu
     public void pause() {
         gamePlaying = false;
         timePaused = Time.time;
@@ -103,6 +124,7 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Activates the relevant UI (failure or success) at the end of a level
     public static void endGame(bool success) {
         instance.gamePlaying = false;
         if(success) {
@@ -117,12 +139,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Returns the game state
     public static bool isGamePlaying() {
         return instance.gamePlaying;
     }
 
 
 
+    // Opens the start menu
     public void restart() {
         SceneManager.LoadScene("StartScreen");
         deactivateUI();
@@ -130,6 +154,7 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Reloads the current level
     public void replay() {
         SceneManager.LoadScene("Main");
         deactivateUI();
@@ -137,12 +162,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Quits the game
     public static void exitGame() {
         Application.Quit();
     }
 
 
 
+    // Starts the game as free play
     public static void startFreePlay() {
         instance.freePlay = true;
         startGame();
@@ -150,14 +177,15 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Moves to the next level
     public void proceedToNextLevel() {
         curLevel++;
-        SceneManager.LoadScene("Main");
-        deactivateUI();
+        replay();
     }
 
 
 
+    // Deactivates all UI Menus
     static void deactivateUI() {
         instance.successUI.SetActive(false);
         instance.failUI.SetActive(false);
@@ -166,12 +194,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Returns the number of levels
     public static int getNumLevels() {
         return instance.numLevels;
     }
 
 
 
+    // Returns the current level
     public static int getCurLevel() {
         return instance.curLevel;
     }
