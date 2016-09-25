@@ -62,7 +62,7 @@ public class SongManager : MonoBehaviour {
 
     // Starts playing the song
     public void playSong() {
-        if(songsPlaying == 0) for(int i = 0; i < GameManager.getCurLevel() + 1; i ++) StartCoroutine(startSong(i, true));
+        if(songsPlaying == 0) for(int i = 0; i < GameManager.getCurLevel() + 1; i++) StartCoroutine(startSong(i, true));
     }
 
 
@@ -114,5 +114,24 @@ public class SongManager : MonoBehaviour {
     // Stops playing the song
     public static void stopSongs() {
         instance.StopAllCoroutines();
+        instance.songsPlaying = 0;
+    }
+
+
+
+    // Resets the current song
+    public static void resetCurrentSong() {
+        int index = GameManager.getCurLevel();
+        instance.songs[index] = new List<AudioClip>();
+        instance.time[index] = new List<float>();
+    }
+
+
+
+    // Resets all songs
+    public static void resetAllSongs() {
+        int numLevels = GameManager.getNumLevels();
+        instance.songs = new List<AudioClip>[numLevels];
+        instance.time = new List<float>[numLevels];
     }
 }

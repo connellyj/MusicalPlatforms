@@ -68,12 +68,10 @@ public class GameManager : MonoBehaviour {
     void onSceneLoad(Scene loadedScene, LoadSceneMode loadSceneMode) {
         if(loadedScene.name == "Main") {
             if(!freePlay) {
-                initTime();
-                gamePlaying = true;
+                initGame();
             }else {
                 initFreePlayUI();
             }
-            initSong();
         }
     }
 
@@ -87,24 +85,33 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Initializes  and starts the game
+    void initGame() {
+        initTime();
+        initSong();
+        gamePlaying = true;
+    }
+
+
+
     // Initializes the UI for free play
     void initFreePlayUI() {
         freePlayUI.SetActive(true);
         pianoButton.onClick.AddListener(() => {
             NoteManager.setInstrumentIndex(0);
-            gamePlaying = true;
+            initGame();
         });
         violinButton.onClick.AddListener(() => {
             NoteManager.setInstrumentIndex(1);
-            gamePlaying = true;
+            initGame();
         });
         fluteButton.onClick.AddListener(() => {
             NoteManager.setInstrumentIndex(2);
-            gamePlaying = true;
+            initGame();
         });
         randomButton.onClick.AddListener(() => {
             randomFreePlay = true;
-            gamePlaying = true;
+            initGame();
         });
     }
 
@@ -138,6 +145,7 @@ public class GameManager : MonoBehaviour {
     // Loads the game scene
     public static void startGame() {
         resetScene();
+        SongManager.resetCurrentSong();
         SceneManager.LoadScene("Main");
     }
 
@@ -209,6 +217,7 @@ public class GameManager : MonoBehaviour {
         resetScene();
         freePlay = false;
         randomFreePlay = false;
+        SongManager.resetAllSongs();
         SceneManager.LoadScene("StartScreen");
     }
 
