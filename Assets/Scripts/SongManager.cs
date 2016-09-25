@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 public class SongManager : MonoBehaviour {
 
+    public float[] volume;
+
     List<AudioClip>[] songs;
     List<float>[] time;
 
@@ -78,13 +80,20 @@ public class SongManager : MonoBehaviour {
 
 
 
+    // Gets the volume for the current instrument
+    public static float getCurVolume() {
+        return instance.volume[GameManager.getCurLevel()];
+    }
+
+
+
     // Plays the song
     IEnumerator startSong(int songToStart, bool endOfLevel) {
         List<float> curSongTime = time[songToStart];
         for(int i = 0; i < songs[songToStart].Count; i ++) {
             while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
             yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
-            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position);
+            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position, volume[songToStart]);
         }
         yield return null;
     }
