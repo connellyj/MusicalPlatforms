@@ -15,7 +15,7 @@ public class SongManager : MonoBehaviour {
     List<AudioClip>[] songs;
     List<float>[] time;
 
-    int numCoroutinesRunning;
+    int songsPlaying;
 
     static SongManager instance;
 
@@ -38,7 +38,7 @@ public class SongManager : MonoBehaviour {
         int numLevels = GameManager.getNumLevels();
         songs = new List<AudioClip>[numLevels];
         time = new List<float>[numLevels];
-        numCoroutinesRunning = 0;
+        songsPlaying = 0;
     }
 
 
@@ -62,7 +62,7 @@ public class SongManager : MonoBehaviour {
 
     // Starts playing the song
     public void playSong() {
-        if(numCoroutinesRunning == 0) for(int i = 0; i < GameManager.getCurLevel() + 1; i ++) StartCoroutine(startSong(i, true));
+        if(songsPlaying == 0) for(int i = 0; i < GameManager.getCurLevel() + 1; i ++) StartCoroutine(startSong(i, true));
     }
 
 
@@ -92,14 +92,21 @@ public class SongManager : MonoBehaviour {
 
     // Plays the song
     IEnumerator startSong(int songToStart, bool endOfLevel) {
-        numCoroutinesRunning++;
+        songsPlaying++;
         List<float> curSongTime = time[songToStart];
-        for(int i = 0; i < songs[songToStart].Count; i ++) {
-            while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
-            yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
-            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position, volume[songToStart]);
+        if(songs[songToStart] != null) {
+            for(int i = 0; i < songs[songToStart].Count; i ++) {
+                // Essentially waits for the game to be unpaused
+                while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
+
+                // Provides the break between notes
+                yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
+
+                // Plays the note
+                AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position, volume[songToStart]);
+            }
         }
-        numCoroutinesRunning--;
+        songsPlaying--;
     }
 
 

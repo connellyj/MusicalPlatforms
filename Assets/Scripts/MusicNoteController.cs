@@ -44,11 +44,17 @@ public class MusicNoteController : MonoBehaviour {
 
 
 
+    // Gets the correct instrument index
+    int getInstrumentIndex() {
+        if(GameManager.isRandomFreePlay()) return Random.Range(0, notes.Length);
+        else return instrumentIndex;
+    }
+
+
+
     // Plays the audio, saves the note in the song, and changes the note color
     public void playNote() {
-        int index;
-        if(GameManager.isRandomFreePlay()) index = Random.Range(0, notes.Length);
-        else index = instrumentIndex;
+        int index = getInstrumentIndex();
         spriteRenderer.color = playedNoteColors[timesPlayed % playedNoteColors.Length];
         timesPlayed++;
         if(tag != "TrebleClef") {

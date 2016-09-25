@@ -1,7 +1,7 @@
 ﻿/**
  * Written by Julia Connelly, 9/28/2016
  * 
- * Adds functionality to the 3 provided buttons
+ * Adds functionality to the start screen buttons
  */
 
 using UnityEngine;
