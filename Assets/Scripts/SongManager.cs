@@ -17,6 +17,7 @@ public class SongManager : MonoBehaviour {
 
 
 
+    // Makes sure there is only one SongManager in each scene
     void Awake() {
         if(instance == null) {
             instance = this;
@@ -37,7 +38,7 @@ public class SongManager : MonoBehaviour {
 
 
 
-    // Records a note in the song
+    // Records a note in the song for the current level
     public static void addNote(AudioClip clip, float timePlayed) {
         if(GameManager.isGamePlaying()) {
             int index = GameManager.getCurLevel();
@@ -61,12 +62,14 @@ public class SongManager : MonoBehaviour {
 
 
 
+    // Plays the songs during the level
     public static void playSongsDuringLevel() {
         for(int i = 0; i < GameManager.getCurLevel(); i++) instance.StartCoroutine(instance.startSong(i, false));
     }
 
 
 
+    // Adds the time before the first note is played to the song
     public static void addStartTime(float startTime) {
         int index = GameManager.getCurLevel();
         instance.time[index] = new List<float>();

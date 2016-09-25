@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 
     float startTime;
     float timeDisplayed;
+    float timePaused;
 
     int curLevel;
 
@@ -87,6 +88,8 @@ public class GameManager : MonoBehaviour {
 
     public void unPauseGame() {
         gamePlaying = true;
+        timePaused = Time.time - timePaused;
+        startTime += timePaused;
         pauseMenu.SetActive(false);
     }
 
@@ -94,6 +97,7 @@ public class GameManager : MonoBehaviour {
 
     public void pause() {
         gamePlaying = false;
+        timePaused = Time.time;
         pauseMenu.SetActive(true);
     }
 
@@ -104,7 +108,9 @@ public class GameManager : MonoBehaviour {
         if(success) {
             instance.successUI.SetActive(true);
             if(instance.curLevel >= instance.numLevels - 1) {
-                instance.nextLevelButton.enabled = false;
+                instance.nextLevelButton.gameObject.SetActive(false);
+            }else {
+                instance.nextLevelButton.gameObject.SetActive(true);
             }
         } else instance.failUI.SetActive(true);
     }

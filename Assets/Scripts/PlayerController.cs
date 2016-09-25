@@ -89,10 +89,10 @@ public class PlayerController : MonoBehaviour {
                 babyJump = false;
             }
 
+            // Face the player in the right direction
             if(h > 0 && !facingRight) {
                 flip();
             }
-
             if(h < 0 && facingRight) {
                 flip();
             }
@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour {
 
 
 
+    // Flips the player to face the other direction
     void flip() {
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;

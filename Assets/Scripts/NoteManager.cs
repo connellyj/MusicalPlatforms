@@ -19,6 +19,7 @@ public class NoteManager : MonoBehaviour {
 
 
 
+    // Make sure there is only one NoteManager in each scene
     void Awake() {
         if(instance == null) {
             instance = this;

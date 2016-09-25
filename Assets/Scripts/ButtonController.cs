@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/**
+ * Written by Julia Connelly, 9/28/2016
+ * 
+ * Adds functionality to the 3 provided buttons
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour {
