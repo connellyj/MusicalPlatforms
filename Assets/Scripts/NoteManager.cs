@@ -15,6 +15,8 @@ public class NoteManager : MonoBehaviour {
     public GameObject[] musicNotes;
     public Color[] playedNoteColors;
 
+    int instrumentIndex;
+
     static NoteManager instance;
 
 
@@ -69,5 +71,20 @@ public class NoteManager : MonoBehaviour {
     // Played colors for all the notes
     public static Color[] getPlayedColors() {
         return instance.playedNoteColors;
+    }
+
+
+
+    // Sets the instrument to be used
+    public static void setInstrumentIndex(int index) {
+        instance.instrumentIndex = index;
+    }
+
+
+
+    // Gets the instrument to be used
+    public static int getInstrumentIndex() {
+        if(!GameManager.isFreePlay()) return GameManager.getCurLevel();
+        else return instance.instrumentIndex;
     }
 }

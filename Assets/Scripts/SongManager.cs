@@ -97,4 +97,10 @@ public class SongManager : MonoBehaviour {
         }
         yield return null;
     }
+
+
+
+    public static void stopSongs() {
+        instance.StopAllCoroutines();
+    }
 }

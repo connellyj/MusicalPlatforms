@@ -15,7 +15,11 @@ public class GameManager : MonoBehaviour {
     public GameObject successUI;
     public GameObject failUI;
     public GameObject pauseMenu;
+    public GameObject freePlayUI;
     public Button nextLevelButton;
+    public Button pianoButton;
+    public Button violinButton;
+    public Button fluteButton;
 
     static GameManager instance;
 
@@ -58,9 +62,28 @@ public class GameManager : MonoBehaviour {
     // Initializes things for the level
     void onSceneLoad(Scene loadedScene, LoadSceneMode loadSceneMode) {
         if(loadedScene.name == "Main") {
-            initTime();
+            if(!freePlay) {
+                initTime();
+                gamePlaying = true;
+            }else {
+                freePlayUI.SetActive(true);
+                pianoButton.onClick.AddListener(() => {
+                    NoteManager.setInstrumentIndex(0);
+                    freePlayUI.SetActive(false);
+                    gamePlaying = true;
+                });
+                violinButton.onClick.AddListener(() => {
+                    NoteManager.setInstrumentIndex(1);
+                    freePlayUI.SetActive(false);
+                    gamePlaying = true;
+                });
+                fluteButton.onClick.AddListener(() => {
+                    NoteManager.setInstrumentIndex(2);
+                    freePlayUI.SetActive(false);
+                    gamePlaying = true;
+                });
+            }
             initSong();
-            gamePlaying = true;
         }
     }
 
@@ -68,7 +91,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         if(Input.GetKeyDown(KeyCode.Escape) && gamePlaying) pause();
-        if(gamePlaying) updateTime();
+        if(gamePlaying && !freePlay) updateTime();
     }
 
 
@@ -149,6 +172,7 @@ public class GameManager : MonoBehaviour {
     // Opens the start menu
     public void restart() {
         SceneManager.LoadScene("StartScreen");
+        SongManager.stopSongs();
         deactivateUI();
     }
 
@@ -157,6 +181,7 @@ public class GameManager : MonoBehaviour {
     // Reloads the current level
     public void replay() {
         SceneManager.LoadScene("Main");
+        SongManager.stopSongs();
         deactivateUI();
     }
 
@@ -204,5 +229,12 @@ public class GameManager : MonoBehaviour {
     // Returns the current level
     public static int getCurLevel() {
         return instance.curLevel;
+    }
+
+
+
+    // Returns whether or not currently in free play
+    public static bool isFreePlay() {
+        return instance.freePlay;
     }
 }

@@ -22,7 +22,7 @@ public class MusicNoteController : MonoBehaviour {
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playedNoteColors = NoteManager.getPlayedColors();
-        instrumentIndex = GameManager.getCurLevel();
+        instrumentIndex = NoteManager.getInstrumentIndex();
         StartCoroutine(moveNote());
     }
 
@@ -52,5 +52,11 @@ public class MusicNoteController : MonoBehaviour {
             AudioSource.PlayClipAtPoint(notes[instrumentIndex], transform.position, SongManager.getCurVolume());
             SongManager.addNote(notes[instrumentIndex], Time.time);
         }
+    }
+
+
+
+    public void setInstrumentIndex(int index) {
+        instrumentIndex = index;
     }
 }

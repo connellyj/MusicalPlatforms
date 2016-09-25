@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour {
         jump = false;
         babyJump = false;
         seenByCamera = false;
+        flip();
     }
     
 
