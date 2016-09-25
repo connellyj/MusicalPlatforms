@@ -41,13 +41,16 @@ public class NoteManager : MonoBehaviour {
     // Creates notes randomly
     IEnumerator spawnNotes() {
         System.Random intGenerator = new System.Random();
-        int randomNoteIndex = 0;
+        bool forward;
+        int randomNoteIndex;
         while (true) {
             if (GameManager.isGamePlaying()) {
                 randomNoteIndex = intGenerator.Next(0, musicNotes.Length - 1);
-                while (randomNoteIndex < musicNotes.Length) {
+                forward = randomNoteIndex < musicNotes.Length / 2; 
+                while (randomNoteIndex < musicNotes.Length && randomNoteIndex >= 0) {
                     Instantiate(musicNotes[randomNoteIndex]);
-                    randomNoteIndex += 3;
+                    if(forward) randomNoteIndex += 3;
+                    else randomNoteIndex -= 3;
                 }
             }
             yield return new WaitForSeconds(distanceBetweenNotes);
