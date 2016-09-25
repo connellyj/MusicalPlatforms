@@ -22,7 +22,7 @@ public class MusicNoteController : MonoBehaviour {
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playedNoteColors = NoteManager.getPlayedColors();
-        instrumentIndex = NoteManager.getInstrumentIndex();
+        instrumentIndex = GameManager.getCurLevel();
         StartCoroutine(moveNote());
     }
 

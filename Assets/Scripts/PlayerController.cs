@@ -21,14 +21,14 @@ public class PlayerController : MonoBehaviour {
     float babyJumpForce = 105f;
     
     Rigidbody2D playerRigidbody;
-    SpriteRenderer playerRenderer;
+    Renderer playerRenderer;
     Transform mostRecentNote;
 
 
 
     void Start() {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        playerRenderer = GetComponent<SpriteRenderer>();
+        playerRenderer = GetComponent<Renderer>();
         jump = false;
         babyJump = false;
         seenByCamera = false;

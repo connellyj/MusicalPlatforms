@@ -10,8 +10,8 @@ using System.Collections.Generic;
 
 public class SongManager : MonoBehaviour {
 
-    Queue<AudioClip> song;
-    Queue<float> time;
+    List<AudioClip>[] songs;
+    List<float>[] time;
 
     static SongManager instance;
 
@@ -30,8 +30,9 @@ public class SongManager : MonoBehaviour {
 
 
     void Start() {
-        song = new Queue<AudioClip>();
-        time = new Queue<float>();
+        int numLevels = GameManager.getNumLevels();
+        songs = new List<AudioClip>[numLevels];
+        time = new List<float>[numLevels];
     }
 
 
@@ -39,8 +40,15 @@ public class SongManager : MonoBehaviour {
     // Records a note in the song
     public static void addNote(AudioClip clip, float timePlayed) {
         if(GameManager.isGamePlaying()) {
-            instance.song.Enqueue(clip);
-            instance.time.Enqueue(timePlayed);
+            int index = GameManager.getCurLevel();
+            if(instance.songs[index] == null) {
+                instance.songs[index] = new List<AudioClip>();
+            }
+            if(instance.time[index] == null) {
+                instance.time[index] = new List<float>();
+            }
+            instance.songs[index].Add(clip);
+            instance.time[index].Add(timePlayed);
         }
     }
 
@@ -48,17 +56,25 @@ public class SongManager : MonoBehaviour {
 
     // Starts playing the song
     public void playSong() {
-        StartCoroutine(startSong());
+        for(int i = 0; i < GameManager.getCurLevel() + 1; i ++) StartCoroutine(startSong(i, true));
+    }
+
+
+
+    public static void playSongsDuringLevel() {
+        for(int i = 0; i < GameManager.getCurLevel(); i++) instance.StartCoroutine(instance.startSong(i, false));
     }
 
 
 
     // Plays the song
-    IEnumerator startSong() {
-        time.Enqueue(0f);
-        foreach(AudioClip clip in instance.song) {
-            AudioSource.PlayClipAtPoint(clip, transform.position);
-            yield return new WaitForSeconds(Mathf.Abs(time.Dequeue() - time.Peek()));
+    IEnumerator startSong(int songToStart, bool endOfLevel) {
+        List<float> curSongTime = time[songToStart];
+        curSongTime.Add(0f);
+        for(int i = 0; i < songs[songToStart].Count; i ++) {
+            while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
+            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position);
+            yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
         }
         yield return null;
     }

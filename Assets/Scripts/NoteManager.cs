@@ -17,8 +17,6 @@ public class NoteManager : MonoBehaviour {
 
     static NoteManager instance;
 
-    int instrumentIndex;
-
 
 
     void Awake() {
@@ -34,7 +32,6 @@ public class NoteManager : MonoBehaviour {
 
 
     void Start() {
-        instrumentIndex = 0;
         StartCoroutine(spawnNotes());
     }
 
@@ -68,17 +65,5 @@ public class NoteManager : MonoBehaviour {
     // Played colors for all the notes
     public static Color[] getPlayedColors() {
         return instance.playedNoteColors;
-    }
-
-
-
-    public static int getInstrumentIndex() {
-        return instance.instrumentIndex;
-    }
-
-
-
-    public static void proceedToNextLevel() {
-        instance.instrumentIndex++;
     }
 }

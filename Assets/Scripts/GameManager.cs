@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour {
     float startTime;
     float timeDisplayed;
 
+    int curLevel;
+
     Text timeText;
 
 
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour {
         SceneManager.sceneLoaded += onSceneLoad;
         gamePlaying = false;
         freePlay = false;
+        curLevel = 0;
     }
 
 
@@ -54,13 +57,14 @@ public class GameManager : MonoBehaviour {
             timeText = FindObjectOfType<Text>();
             startTime = Time.time;
             gamePlaying = true;
+            SongManager.playSongsDuringLevel();
         }
     }
 
 
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.Escape)) pause();
+        if(Input.GetKeyDown(KeyCode.Escape) && gamePlaying) pause();
         if(gamePlaying) updateTime();
     }
 
@@ -98,7 +102,7 @@ public class GameManager : MonoBehaviour {
         instance.gamePlaying = false;
         if(success) {
             instance.successUI.SetActive(true);
-            if(NoteManager.getInstrumentIndex() >= instance.numLevels - 1) {
+            if(instance.curLevel >= instance.numLevels - 1) {
                 instance.nextLevelButton.enabled = false;
             }
         } else instance.failUI.SetActive(true);
@@ -140,7 +144,7 @@ public class GameManager : MonoBehaviour {
 
 
     public void proceedToNextLevel() {
-        NoteManager.proceedToNextLevel();
+        curLevel++;
         SceneManager.LoadScene("Main");
         deactivateUI();
     }
@@ -151,5 +155,17 @@ public class GameManager : MonoBehaviour {
         instance.successUI.SetActive(false);
         instance.failUI.SetActive(false);
         instance.pauseMenu.SetActive(false);
+    }
+
+
+
+    public static int getNumLevels() {
+        return instance.numLevels;
+    }
+
+
+
+    public static int getCurLevel() {
+        return instance.curLevel;
     }
 }
