@@ -46,17 +46,14 @@ public class MusicNoteController : MonoBehaviour {
 
     // Plays the audio, saves the note in the song, and changes the note color
     public void playNote() {
+        int index;
+        if(GameManager.isRandomFreePlay()) index = Random.Range(0, notes.Length);
+        else index = instrumentIndex;
         spriteRenderer.color = playedNoteColors[timesPlayed % playedNoteColors.Length];
         timesPlayed++;
         if(tag != "TrebleClef") {
-            AudioSource.PlayClipAtPoint(notes[instrumentIndex], transform.position, SongManager.getCurVolume());
-            SongManager.addNote(notes[instrumentIndex], Time.time);
+            AudioSource.PlayClipAtPoint(notes[index], transform.position, SongManager.getCurVolume());
+            SongManager.addNote(notes[index], Time.time);
         }
-    }
-
-
-
-    public void setInstrumentIndex(int index) {
-        instrumentIndex = index;
     }
 }

@@ -17,15 +17,18 @@ public class GameManager : MonoBehaviour {
     public GameObject pauseMenu;
     public GameObject freePlayUI;
     public Text winMessage;
+    public Text failMessage;
     public Button nextLevelButton;
     public Button pianoButton;
     public Button violinButton;
     public Button fluteButton;
+    public Button randomButton;
 
     static GameManager instance;
 
     bool gamePlaying;
     bool freePlay;
+    bool randomFreePlay;
 
     float startTime;
     float timeDisplayed;
@@ -81,6 +84,11 @@ public class GameManager : MonoBehaviour {
                 fluteButton.onClick.AddListener(() => {
                     NoteManager.setInstrumentIndex(2);
                     freePlayUI.SetActive(false);
+                    gamePlaying = true;
+                });
+                randomButton.onClick.AddListener(() => {
+                    freePlayUI.SetActive(false);
+                    randomFreePlay = true;
                     gamePlaying = true;
                 });
             }
@@ -152,14 +160,19 @@ public class GameManager : MonoBehaviour {
     public static void endGame(bool success) {
         instance.gamePlaying = false;
         if(success) {
-            instance.successUI.SetActive(true);
             if(instance.curLevel >= instance.numLevels - 1) {
                 instance.nextLevelButton.gameObject.SetActive(false);
                 instance.winMessage.text = "You win!";
-            }else {
+            } else {
                 instance.nextLevelButton.gameObject.SetActive(true);
+                instance.winMessage.text = "Level Completed!";
             }
-        } else instance.failUI.SetActive(true);
+            instance.successUI.SetActive(true);
+        } else {
+            if(isFreePlay()) instance.failMessage.text = "Uh-oh, you fell!";
+            else instance.failMessage.text = "Level failed!";
+            instance.failUI.SetActive(true);
+        }
     }
 
 
@@ -238,5 +251,11 @@ public class GameManager : MonoBehaviour {
     // Returns whether or not currently in free play
     public static bool isFreePlay() {
         return instance.freePlay;
+    }
+
+
+
+    public static bool isRandomFreePlay() {
+        return instance.randomFreePlay;
     }
 }
