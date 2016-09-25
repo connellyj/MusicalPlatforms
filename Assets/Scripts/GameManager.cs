@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour {
             timeText = FindObjectOfType<Text>();
             startTime = Time.time;
             gamePlaying = true;
+            SongManager.addStartTime(startTime);
             SongManager.playSongsDuringLevel();
         }
     }

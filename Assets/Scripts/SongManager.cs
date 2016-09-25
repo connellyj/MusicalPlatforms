@@ -67,14 +67,21 @@ public class SongManager : MonoBehaviour {
 
 
 
+    public static void addStartTime(float startTime) {
+        int index = GameManager.getCurLevel();
+        instance.time[index] = new List<float>();
+        instance.time[index].Add(startTime);
+    }
+
+
+
     // Plays the song
     IEnumerator startSong(int songToStart, bool endOfLevel) {
         List<float> curSongTime = time[songToStart];
-        curSongTime.Add(0f);
         for(int i = 0; i < songs[songToStart].Count; i ++) {
             while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
-            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position);
             yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
+            AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position);
         }
         yield return null;
     }
