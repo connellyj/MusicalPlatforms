@@ -92,4 +92,11 @@ public class NoteManager : MonoBehaviour {
         if(!GameManager.isFreePlay()) return GameManager.getCurLevel();
         else return instance.instrumentIndex;
     }
+
+
+
+    // Returns the current collectable
+    public static GameObject getCurrentCollectable() {
+        return instance.collectables[GameManager.getCurLevel()];
+    }
 }

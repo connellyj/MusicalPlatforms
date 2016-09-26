@@ -116,7 +116,11 @@ public class GameManager : MonoBehaviour {
     void initGame() {
         initTime();
         initSong();
-        if(!isFreePlay()) instance.numCollectedText.gameObject.SetActive(true);
+        if(!isFreePlay()) {
+            instance.numCollectedText.gameObject.SetActive(true);
+            GameObject collectable = Instantiate(NoteManager.getCurrentCollectable(), Camera.main.ViewportToWorldPoint(new Vector3(0.05f, 0.9f, Camera.main.nearClipPlane)), NoteManager.getCurrentCollectable().gameObject.transform.rotation) as GameObject;
+            collectable.transform.localScale *= 2;
+        }
         gamePlaying = true;
     }
 
@@ -312,7 +316,7 @@ public class GameManager : MonoBehaviour {
 
     // Adds one more to the collected score
     public static void addCollectable() {
-        instance.numCollected++;
+        if(instance.numCollected < instance.numToCollect) instance.numCollected++;
         instance.numCollectedText.text = instance.numCollected + " / " + instance.numToCollect;
     }
 }
