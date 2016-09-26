@@ -11,10 +11,9 @@ public class NoteManager : MonoBehaviour {
 
     public float noteSpeed;
     public float distanceBetweenNotes;
-
     public GameObject[] musicNotes;
     public Color[] playedNoteColors;
-    public GameObject collectable;
+    public GameObject[] collectables;
 
     int instrumentIndex;
 
@@ -55,7 +54,10 @@ public class NoteManager : MonoBehaviour {
                     if(forward) randomNoteIndex += 3;
                     else randomNoteIndex -= 3;
 
-                    if(Random.value < 0.5) Instantiate(collectable, curNote.transform);
+                    if(!GameManager.isFreePlay() && Random.value < 0.7) {
+                        GameObject curCollectable = Instantiate(collectables[GameManager.getCurLevel()], curNote.transform.position + Vector3.up * 1.5f, collectables[GameManager.getCurLevel()].gameObject.transform.rotation) as GameObject;
+                        curCollectable.transform.parent = curNote.transform;
+                    }
                 }
             }
             yield return new WaitForSeconds(distanceBetweenNotes);
