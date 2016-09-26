@@ -14,6 +14,7 @@ public class NoteManager : MonoBehaviour {
 
     public GameObject[] musicNotes;
     public Color[] playedNoteColors;
+    public GameObject collectable;
 
     int instrumentIndex;
 
@@ -50,9 +51,11 @@ public class NoteManager : MonoBehaviour {
                 randomNoteIndex = intGenerator.Next(0, musicNotes.Length - 1);
                 forward = randomNoteIndex < musicNotes.Length / 2; 
                 while (randomNoteIndex < musicNotes.Length && randomNoteIndex >= 0) {
-                    Instantiate(musicNotes[randomNoteIndex]);
+                    GameObject curNote = Instantiate(musicNotes[randomNoteIndex]);
                     if(forward) randomNoteIndex += 3;
                     else randomNoteIndex -= 3;
+
+                    if(Random.value < 0.5) Instantiate(collectable, curNote.transform);
                 }
             }
             yield return new WaitForSeconds(distanceBetweenNotes);

@@ -12,12 +12,14 @@ public class GameManager : MonoBehaviour {
 
     public float levelTime;
     public int numLevels;
+    public int numToCollect;
     public GameObject successUI;
     public GameObject failUI;
     public GameObject pauseMenu;
     public GameObject freePlayUI;
     public Text winMessage;
     public Text failMessage;
+    public Text timeText;
     public Button nextLevelButton;
     public Button pianoButton;
     public Button violinButton;
@@ -35,8 +37,7 @@ public class GameManager : MonoBehaviour {
     float timePaused;
 
     int curLevel;
-
-    Text timeText;
+    int numCollected;
 
 
 
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour {
         freePlay = false;
         randomFreePlay = false;
         curLevel = 0;
+        numCollected = 0;
         initFreePlayButtons();
     }
 
@@ -127,8 +129,8 @@ public class GameManager : MonoBehaviour {
 
     // Initializes the time for the level
     void initTime() {
-        timeText = FindObjectOfType<Text>();
         startTime = Time.time;
+        timeText.gameObject.SetActive(true);
     }
 
 
@@ -295,5 +297,14 @@ public class GameManager : MonoBehaviour {
     static void resetScene() {
         deactivateUI();
         SongManager.stopSongs();
+        instance.timeText.gameObject.SetActive(false);
+        instance.numCollected = 0;
+    }
+
+
+
+    // Adds one more to the collected score
+    public static void addCollectable() {
+        instance.numCollected++;
     }
 }
