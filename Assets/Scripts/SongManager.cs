@@ -62,14 +62,20 @@ public class SongManager : MonoBehaviour {
 
     // Starts playing the song
     public void playSong() {
-        if(songsPlaying == 0) for(int i = 0; i < GameManager.getCurLevel() + 1; i++) StartCoroutine(startSong(i, true));
+        if(songsPlaying == 0) {
+            for(int i = 0; i < GameManager.getCurLevel() + 1; i++) {
+                StartCoroutine(startSong(i, true, calculateSilentTime()));
+            }
+        }
     }
 
 
 
     // Plays the songs during the level
     public static void playSongsDuringLevel() {
-        for(int i = 0; i < GameManager.getCurLevel(); i++) instance.StartCoroutine(instance.startSong(i, false));
+        for(int i = 0; i < GameManager.getCurLevel(); i++) {
+            instance.StartCoroutine(instance.startSong(i, false, 0));
+        }
     }
 
 
@@ -91,7 +97,7 @@ public class SongManager : MonoBehaviour {
 
 
     // Plays the song
-    IEnumerator startSong(int songToStart, bool endOfLevel) {
+    IEnumerator startSong(int songToStart, bool endOfLevel, float timeToRemoveFromBeginning) {
         songsPlaying++;
         List<float> curSongTime = time[songToStart];
         if(songs[songToStart] != null) {
@@ -100,7 +106,8 @@ public class SongManager : MonoBehaviour {
                 while(!endOfLevel && !GameManager.isGamePlaying()) yield return null;
 
                 // Provides the break between notes
-                yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]));
+                yield return new WaitForSeconds(Mathf.Abs(curSongTime[i] - curSongTime[i + 1]) - timeToRemoveFromBeginning);
+                timeToRemoveFromBeginning = 0;
 
                 // Plays the note
                 AudioSource.PlayClipAtPoint(songs[songToStart][i], transform.position, volume[songToStart]);
@@ -133,5 +140,17 @@ public class SongManager : MonoBehaviour {
         int numLevels = GameManager.getNumLevels();
         instance.songs = new List<AudioClip>[numLevels];
         instance.time = new List<float>[numLevels];
+    }
+
+
+
+    // Returns how long the song is quiet at the beginning
+    float calculateSilentTime() {
+        float shortestTime = 100;
+        for(int i = 0; i < GameManager.getCurLevel() + 1; i++) {
+            float nextTime = Mathf.Abs(time[i][0] - time[i][1]);
+            if(nextTime < shortestTime) shortestTime = nextTime;
+        }
+        return shortestTime;
     }
 }
