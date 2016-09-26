@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour {
         freePlay = false;
         randomFreePlay = false;
         curLevel = 0;
+        initFreePlayButtons();
     }
 
 
@@ -70,9 +71,31 @@ public class GameManager : MonoBehaviour {
             if(!freePlay) {
                 initGame();
             }else {
-                initFreePlayUI();
+                freePlayUI.SetActive(true);
             }
         }
+    }
+
+
+
+    // Initializes the buttons for the free play menu
+    void initFreePlayButtons() {
+        pianoButton.onClick.AddListener(() => {
+            NoteManager.setInstrumentIndex(0);
+            initGame();
+        });
+        violinButton.onClick.AddListener(() => {
+            NoteManager.setInstrumentIndex(1);
+            initGame();
+        });
+        fluteButton.onClick.AddListener(() => {
+            NoteManager.setInstrumentIndex(2);
+            initGame();
+        });
+        randomButton.onClick.AddListener(() => {
+            randomFreePlay = true;
+            initGame();
+        });
     }
 
 
@@ -90,29 +113,6 @@ public class GameManager : MonoBehaviour {
         initTime();
         initSong();
         gamePlaying = true;
-    }
-
-
-
-    // Initializes the UI for free play
-    void initFreePlayUI() {
-        freePlayUI.SetActive(true);
-        pianoButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(0);
-            initGame();
-        });
-        violinButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(1);
-            initGame();
-        });
-        fluteButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(2);
-            initGame();
-        });
-        randomButton.onClick.AddListener(() => {
-            randomFreePlay = true;
-            initGame();
-        });
     }
 
 
