@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
     public Text winMessage;
     public Text failMessage;
     public Text timeText;
+    public Text numCollectedText;
     public Button nextLevelButton;
     public Button pianoButton;
     public Button violinButton;
@@ -61,6 +62,7 @@ public class GameManager : MonoBehaviour {
         randomFreePlay = false;
         curLevel = 0;
         numCollected = 0;
+        numCollectedText.text = numCollected + " / " + numToCollect;
         initFreePlayButtons();
     }
 
@@ -114,6 +116,7 @@ public class GameManager : MonoBehaviour {
     void initGame() {
         initTime();
         initSong();
+        if(!isFreePlay()) instance.numCollectedText.gameObject.SetActive(true);
         gamePlaying = true;
     }
 
@@ -130,7 +133,7 @@ public class GameManager : MonoBehaviour {
     // Initializes the time for the level
     void initTime() {
         startTime = Time.time;
-        timeText.gameObject.SetActive(true);
+        if(!isFreePlay()) timeText.gameObject.SetActive(true);
     }
 
 
@@ -138,7 +141,10 @@ public class GameManager : MonoBehaviour {
     // Updates the time text and ends the game if it's zero
     void updateTime() {
         timeDisplayed = Mathf.Round(levelTime - (Time.time - startTime));
-        if(timeDisplayed == 0) endGame(true);
+        if(timeDisplayed == 0) {
+            if(numCollected >= numToCollect) endGame(true);
+            else endGame(false);
+        }
         timeText.text = timeDisplayed.ToString();
     }
 
@@ -299,6 +305,7 @@ public class GameManager : MonoBehaviour {
         SongManager.stopSongs();
         instance.timeText.gameObject.SetActive(false);
         instance.numCollected = 0;
+        instance.numCollectedText.gameObject.SetActive(false);
     }
 
 
@@ -306,5 +313,6 @@ public class GameManager : MonoBehaviour {
     // Adds one more to the collected score
     public static void addCollectable() {
         instance.numCollected++;
+        instance.numCollectedText.text = instance.numCollected + " / " + instance.numToCollect;
     }
 }
