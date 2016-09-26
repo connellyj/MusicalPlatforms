@@ -50,17 +50,23 @@ public class NoteManager : MonoBehaviour {
                 randomNoteIndex = intGenerator.Next(0, musicNotes.Length - 1);
                 forward = randomNoteIndex < musicNotes.Length / 2; 
                 while (randomNoteIndex < musicNotes.Length && randomNoteIndex >= 0) {
-                    GameObject curNote = Instantiate(musicNotes[randomNoteIndex]);
+                    createNote(randomNoteIndex);
                     if(forward) randomNoteIndex += 3;
                     else randomNoteIndex -= 3;
-
-                    if(!GameManager.isFreePlay() && Random.value < 0.7) {
-                        GameObject curCollectable = Instantiate(collectables[GameManager.getCurLevel()], curNote.transform.position + Vector3.up * 1.5f, collectables[GameManager.getCurLevel()].gameObject.transform.rotation) as GameObject;
-                        curCollectable.transform.parent = curNote.transform;
-                    }
                 }
             }
             yield return new WaitForSeconds(distanceBetweenNotes);
+        }
+    }
+
+
+
+    // Spawns a note and sometimes puts a collectable on top of it
+    void createNote(int randomNoteIndex) {
+        GameObject curNote = Instantiate(musicNotes[randomNoteIndex]);
+        if(!GameManager.isFreePlay() && Random.value < 0.7) {
+            GameObject curCollectable = Instantiate(collectables[getInstrumentIndex()], curNote.transform) as GameObject;
+            curCollectable.transform.position = curNote.transform.position + Vector3.up * 1.5f;
         }
     }
 

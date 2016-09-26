@@ -118,8 +118,9 @@ public class GameManager : MonoBehaviour {
         initSong();
         if(!isFreePlay()) {
             instance.numCollectedText.gameObject.SetActive(true);
-            GameObject collectable = Instantiate(NoteManager.getCurrentCollectable(), Camera.main.ViewportToWorldPoint(new Vector3(0.05f, 0.9f, Camera.main.nearClipPlane)), NoteManager.getCurrentCollectable().gameObject.transform.rotation) as GameObject;
+            GameObject collectable = Instantiate(NoteManager.getCurrentCollectable()) as GameObject;
             collectable.transform.localScale *= 2;
+            Destroy(collectable.GetComponent<Collider2D>());
         }
         gamePlaying = true;
     }
