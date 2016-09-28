@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/**
+ * Written by Julia Connelly, 9/28/2016
+ * 
+ * Adds functionality to buttons on the pop-up-UI objects
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PopUpController : MonoBehaviour {
@@ -9,6 +15,8 @@ public class PopUpController : MonoBehaviour {
     public Button nextLevelButton;
     public Button playSongButton;
     public Text messageText;
+
+
 
     void Start() {
         if(unPauseButton != null) {
@@ -22,6 +30,8 @@ public class PopUpController : MonoBehaviour {
         if(nextLevelButton != null) nextLevelButton.onClick.AddListener(() => GameManager.proceedToNextLevel());
         if(playSongButton != null) playSongButton.onClick.AddListener(() => SongManager.playSong());
     }
+
+
 
     public void setMessage(string newMessage) {
         messageText.text = newMessage;

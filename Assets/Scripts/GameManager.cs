@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour {
 
 
 
-    // Updates the time text and ends the game if it's zero
+    // Updates the time text and ends the game if it's zero and the player has collected enough items
     void updateTime() {
         float timeDisplayed = Mathf.Round(levelTime - (Time.time - startTime));
         if(timeDisplayed == 0) {
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour {
 
 
 
-    // Initializes any required UI components
+    // Initializes any required UI components (time text, the items collected text)
     void initUI() {
         GameObject tmpCanvas = Instantiate(numCollectedTextPrefab) as GameObject;
         numCollectedText = tmpCanvas.transform.GetChild(0).GetComponent<Text>();
@@ -199,20 +199,20 @@ public class GameManager : MonoBehaviour {
 
     // Opens the start menu
     public static void goToMainMenu() {
-        instance.freePlay = false;
-        instance.resetLevel();
-        SongManager.stopSongs();
-        SongManager.resetAllSongs();
+        instance.resetGameState();
         SceneManager.LoadScene("StartScreen");
     }
 
 
 
-    // Resets the game so it starts at the first level again
-    void resetLevel() {
+    // Resets the game so it will start again from the beginning
+    void resetGameState() {
+        freePlay = false;
         numToCollect -= numCollectIncrement * curLevel;
         NoteManager.resetLevel();
         curLevel = 0;
+        SongManager.stopSongs();
+        SongManager.resetAllSongs();
     }
 
 

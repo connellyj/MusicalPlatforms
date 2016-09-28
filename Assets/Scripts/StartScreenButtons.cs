@@ -13,6 +13,8 @@ public class StartScreenButtons : MonoBehaviour {
     public Button exitButton;
     public Button freePlayButton;
 
+
+
     void Start() {
         startButton.onClick.AddListener(() => GameManager.startNormalGame());
         exitButton.onClick.AddListener(() => GameManager.exitGame());

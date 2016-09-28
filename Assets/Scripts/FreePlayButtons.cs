@@ -1,9 +1,17 @@
-﻿using UnityEngine;
+﻿/**
+ * Written by Julia Connelly, 9/28/2016
+ * 
+ * Adds functionality to the free play UI buttons
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 public class FreePlayButtons : MonoBehaviour {
 
     public Button[] buttons;
+
+
 
     void Start() {
         buttons[0].onClick.AddListener(() => {

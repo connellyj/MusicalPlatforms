@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/**
+ * Written by Julia Connelly, 9/28/2016
+ * 
+ * Detects collisions with collectable objects
+ */
+
+using UnityEngine;
 
 public class CollectableController : MonoBehaviour {
 

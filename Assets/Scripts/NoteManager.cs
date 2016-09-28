@@ -91,7 +91,7 @@ public class NoteManager : MonoBehaviour {
 
 
 
-    // Sets the instrument to be used
+    // Sets the instrument to be used (only used for free play)
     public static void setInstrumentIndex(int index) {
         instance.instrumentIndex = index;
     }

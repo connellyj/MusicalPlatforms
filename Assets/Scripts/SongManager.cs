@@ -60,7 +60,7 @@ public class SongManager : MonoBehaviour {
 
 
 
-    // Starts playing the song
+    // Starts playing the song if it isn't already playing
     public static void playSong() {
         if(instance.songsPlaying == 0) {
             for(int i = 0; i < GameManager.getCurLevel() + 1; i++) {
