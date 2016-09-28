@@ -17,6 +17,11 @@ public class NoteManager : MonoBehaviour {
 
     int instrumentIndex;
 
+    bool randomNote;
+
+    readonly static float noteSpeedIncrement = 0.01f;
+    readonly static float noteDistanceIncrement = 0.2f;
+
     static NoteManager instance;
 
 
@@ -64,7 +69,7 @@ public class NoteManager : MonoBehaviour {
     // Spawns a note and sometimes puts a collectable on top of it
     void createNote(int randomNoteIndex) {
         GameObject curNote = Instantiate(musicNotes[randomNoteIndex]);
-        if(!GameManager.isFreePlay() && Random.value < 0.7) {
+        if(!GameManager.isFreePlay() && Random.value < 0.6) {
             GameObject curCollectable = Instantiate(collectables[getInstrumentIndex()], curNote.transform) as GameObject;
             curCollectable.transform.position = curNote.transform.position + Vector3.up * 1.5f;
         }
@@ -96,7 +101,10 @@ public class NoteManager : MonoBehaviour {
     // Gets the instrument to be used
     public static int getInstrumentIndex() {
         if(!GameManager.isFreePlay()) return GameManager.getCurLevel();
-        else return instance.instrumentIndex;
+        else {
+            if(instance.instrumentIndex == GameManager.getNumLevels()) return Random.Range(0, GameManager.getNumLevels());
+            else return instance.instrumentIndex;
+        }
     }
 
 
@@ -104,5 +112,21 @@ public class NoteManager : MonoBehaviour {
     // Returns the current collectable
     public static GameObject getCurrentCollectable() {
         return instance.collectables[GameManager.getCurLevel()];
+    }
+
+
+
+    // Moves on to the next level
+    public static void proceedToNextLevel() {
+        instance.noteSpeed += noteSpeedIncrement;
+        instance.distanceBetweenNotes -= noteDistanceIncrement;
+    }
+
+
+
+    // Resets to the state of the first level
+    public static void resetLevel() {
+        instance.noteSpeed -= noteSpeedIncrement * GameManager.getCurLevel();
+        instance.distanceBetweenNotes += noteDistanceIncrement * GameManager.getCurLevel();
     }
 }

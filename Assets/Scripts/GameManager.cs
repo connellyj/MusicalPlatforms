@@ -13,28 +13,24 @@ public class GameManager : MonoBehaviour {
     public float levelTime;
     public int numLevels;
     public int numToCollect;
-    public GameObject successUI;
-    public GameObject failUI;
-    public GameObject pauseMenu;
-    public GameObject freePlayUI;
-    public Text winMessage;
-    public Text failMessage;
-    public Text timeText;
-    public Text numCollectedText;
-    public Button nextLevelButton;
-    public Button pianoButton;
-    public Button violinButton;
-    public Button fluteButton;
-    public Button randomButton;
+    public GameObject successUIPrefab;
+    public GameObject failUIPrefab;
+    public GameObject pauseMenuPrefab;
+    public GameObject freePlayUIPrefab;
+    public GameObject timeTextPrefab;
+    public GameObject numCollectedTextPrefab;
+
+    Text timeText;
+    Text numCollectedText;
+
+    readonly static int numCollectIncrement = 5;
 
     static GameManager instance;
 
     bool gamePlaying;
     bool freePlay;
-    bool randomFreePlay;
 
     float startTime;
-    float timeDisplayed;
     float timePaused;
 
     int curLevel;
@@ -59,70 +55,85 @@ public class GameManager : MonoBehaviour {
         SceneManager.sceneLoaded += onSceneLoad;
         gamePlaying = false;
         freePlay = false;
-        randomFreePlay = false;
+        startTime = 0f;
+        timePaused = 0f;
         curLevel = 0;
         numCollected = 0;
-        numCollectedText.text = numCollected + " / " + numToCollect;
-        initFreePlayButtons();
-    }
-
-
-
-    // Gets called when a scene is finished loading
-    // Initializes things for the level
-    void onSceneLoad(Scene loadedScene, LoadSceneMode loadSceneMode) {
-        if(loadedScene.name == "Main") {
-            if(!freePlay) {
-                initGame();
-            }else {
-                freePlayUI.SetActive(true);
-            }
-        }
-    }
-
-
-
-    // Initializes the buttons for the free play menu
-    void initFreePlayButtons() {
-        pianoButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(0);
-            initGame();
-        });
-        violinButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(1);
-            initGame();
-        });
-        fluteButton.onClick.AddListener(() => {
-            NoteManager.setInstrumentIndex(2);
-            initGame();
-        });
-        randomButton.onClick.AddListener(() => {
-            randomFreePlay = true;
-            initGame();
-        });
     }
 
 
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.Escape) && gamePlaying) pause();
-        if(gamePlaying && !freePlay) updateTime();
-        if(gamePlaying) deactivateUI();
+        if(gamePlaying) {
+            if(Input.GetKeyDown(KeyCode.Escape)) pause();
+            if(!freePlay) updateTime();
+        }
+    }
+
+
+
+    // Updates the time text and ends the game if it's zero
+    void updateTime() {
+        float timeDisplayed = Mathf.Round(levelTime - (Time.time - startTime));
+        if(timeDisplayed == 0) {
+            if(numCollected >= numToCollect) endGame(true);
+            else endGame(false);
+        }
+        timeText.text = timeDisplayed.ToString();
+    }
+
+
+
+    // Loads the game scene
+    public static void startNormalGame() {
+        SceneManager.LoadScene("Main");
+    }
+
+
+
+    // Starts the game as free play
+    public static void startFreePlayMode() {
+        instance.freePlay = true;
+        Instantiate(instance.freePlayUIPrefab);
+    }
+
+
+
+    // Called by Unity when a scene is loaded
+    void onSceneLoad(Scene sceneLoaded, LoadSceneMode loadSceneMode) {
+        if(sceneLoaded.name == "Main") startGame();
     }
 
 
 
     // Initializes  and starts the game
-    void initGame() {
-        initTime();
+    void startGame() {
+        startTime = Time.time;
+        numCollected = 0;
+        if(!freePlay) initUI();
         initSong();
-        if(!isFreePlay()) {
-            instance.numCollectedText.gameObject.SetActive(true);
-            GameObject collectable = Instantiate(NoteManager.getCurrentCollectable()) as GameObject;
-            collectable.transform.localScale *= 2;
-            Destroy(collectable.GetComponent<Collider2D>());
-        }
         gamePlaying = true;
+    }
+
+
+
+    // Initializes any required UI components
+    void initUI() {
+        GameObject tmpCanvas = Instantiate(numCollectedTextPrefab) as GameObject;
+        numCollectedText = tmpCanvas.transform.GetChild(0).GetComponent<Text>();
+        numCollectedText.text = numCollected + " / " + numToCollect;
+        tmpCanvas = Instantiate(timeTextPrefab) as GameObject;
+        timeText = tmpCanvas.transform.GetChild(0).GetComponent<Text>();
+        initCollectableSprite();
+    }
+
+
+
+    // Initializes the sprite of the object currently being collected
+    void initCollectableSprite() {
+        GameObject collectable = Instantiate(NoteManager.getCurrentCollectable()) as GameObject;
+        collectable.transform.localScale *= 2;
+        Destroy(collectable.GetComponent<Collider2D>());
     }
 
 
@@ -135,41 +146,11 @@ public class GameManager : MonoBehaviour {
 
 
 
-    // Initializes the time for the level
-    void initTime() {
-        startTime = Time.time;
-        if(!isFreePlay()) timeText.gameObject.SetActive(true);
-    }
-
-
-
-    // Updates the time text and ends the game if it's zero
-    void updateTime() {
-        timeDisplayed = Mathf.Round(levelTime - (Time.time - startTime));
-        if(timeDisplayed == 0) {
-            if(numCollected >= numToCollect) endGame(true);
-            else endGame(false);
-        }
-        timeText.text = timeDisplayed.ToString();
-    }
-
-
-
-    // Loads the game scene
-    public static void startGame() {
-        resetScene();
-        SongManager.resetCurrentSong();
-        SceneManager.LoadScene("Main");
-    }
-
-
-
     // Unpauses the game by updating the time and hiding the pause menu
-    public void unPauseGame() {
-        timePaused = Time.time - timePaused;
-        startTime += timePaused;
-        pauseMenu.SetActive(false);
-        gamePlaying = true;
+    public static void unPauseGame() {
+        instance.timePaused = Time.time - instance.timePaused;
+        instance.startTime += instance.timePaused;
+        instance.gamePlaying = true;
     }
 
 
@@ -178,7 +159,7 @@ public class GameManager : MonoBehaviour {
     public void pause() {
         gamePlaying = false;
         timePaused = Time.time;
-        pauseMenu.SetActive(true);
+        Instantiate(pauseMenuPrefab);
     }
 
 
@@ -187,58 +168,70 @@ public class GameManager : MonoBehaviour {
     public static void endGame(bool success) {
         instance.gamePlaying = false;
         if(success) {
-            activateSuccessfulUI();
+            instance.activateSuccessfulUI();
         } else {
-            activateFailureUI();
+            instance.activateFailureUI();
         }
     }
 
 
 
     // Activates the failure UI
-    static void activateFailureUI() {
-        if(isFreePlay()) instance.failMessage.text = "Uh-oh, you fell!";
-        else instance.failMessage.text = "Level failed!";
-        instance.failUI.SetActive(true);
+    void activateFailureUI() {
+        SongManager.stopSongs();
+        PopUpController failUI = (Instantiate(failUIPrefab) as GameObject).GetComponent<PopUpController>();
+        if(freePlay) failUI.setMessage("Uh-oh, you fell!");
     }
 
 
 
     // Activates the successful UI
-    static void activateSuccessfulUI() {
-        if(instance.curLevel >= instance.numLevels - 1) {
-            instance.nextLevelButton.gameObject.SetActive(false);
-            instance.winMessage.text = "You win!";
-        } else {
-            instance.nextLevelButton.gameObject.SetActive(true);
-            instance.winMessage.text = "Level Completed!";
+    void activateSuccessfulUI() {
+        SongManager.stopSongs();
+        PopUpController successUI = (Instantiate(successUIPrefab) as GameObject).GetComponent<PopUpController>();
+        if(curLevel >= numLevels - 1) {
+            successUI.nextLevelButton.gameObject.SetActive(false);
+            successUI.setMessage("You win!");
         }
-        instance.successUI.SetActive(true);
-    }
-
-
-
-    // Returns the game state
-    public static bool isGamePlaying() {
-        return instance.gamePlaying;
     }
 
 
 
     // Opens the start menu
-    public void restart() {
-        resetScene();
-        freePlay = false;
-        randomFreePlay = false;
+    public static void goToMainMenu() {
+        instance.freePlay = false;
+        instance.resetLevel();
+        SongManager.stopSongs();
         SongManager.resetAllSongs();
         SceneManager.LoadScene("StartScreen");
     }
 
 
 
+    // Resets the game so it starts at the first level again
+    void resetLevel() {
+        numToCollect -= numCollectIncrement * curLevel;
+        NoteManager.resetLevel();
+        curLevel = 0;
+    }
+
+
+
     // Reloads the current level
-    public void replay() {
-        startGame();
+    public static void restartLevel() {
+        SongManager.stopSongs();
+        SongManager.resetCurrentSong();
+        startNormalGame();
+    }
+
+
+
+    // Moves to the next level
+    public static void proceedToNextLevel() {
+        instance.curLevel++;
+        instance.numToCollect += numCollectIncrement;
+        NoteManager.proceedToNextLevel();
+        restartLevel();
     }
 
 
@@ -246,32 +239,6 @@ public class GameManager : MonoBehaviour {
     // Quits the game
     public static void exitGame() {
         Application.Quit();
-    }
-
-
-
-    // Starts the game as free play
-    public static void startFreePlay() {
-        instance.freePlay = true;
-        startGame();
-    }
-
-
-
-    // Moves to the next level
-    public void proceedToNextLevel() {
-        curLevel++;
-        startGame();
-    }
-
-
-
-    // Deactivates all UI Menus
-    static void deactivateUI() {
-        instance.successUI.SetActive(false);
-        instance.failUI.SetActive(false);
-        instance.pauseMenu.SetActive(false);
-        instance.freePlayUI.SetActive(false);
     }
 
 
@@ -290,27 +257,16 @@ public class GameManager : MonoBehaviour {
 
 
 
+    // Returns the game state
+    public static bool isGamePlaying() {
+        return instance.gamePlaying;
+    }
+
+
+
     // Returns whether or not currently in free play
     public static bool isFreePlay() {
         return instance.freePlay;
-    }
-
-
-
-    // Returns whether or not the free play is random
-    public static bool isRandomFreePlay() {
-        return instance.randomFreePlay;
-    }
-
-
-
-    // Resets the UI and stops the music
-    static void resetScene() {
-        deactivateUI();
-        SongManager.stopSongs();
-        instance.timeText.gameObject.SetActive(false);
-        instance.numCollected = 0;
-        instance.numCollectedText.gameObject.SetActive(false);
     }
 
 

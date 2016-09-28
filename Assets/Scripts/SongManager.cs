@@ -61,10 +61,10 @@ public class SongManager : MonoBehaviour {
 
 
     // Starts playing the song
-    public void playSong() {
-        if(songsPlaying == 0) {
+    public static void playSong() {
+        if(instance.songsPlaying == 0) {
             for(int i = 0; i < GameManager.getCurLevel() + 1; i++) {
-                StartCoroutine(startSong(i, true, calculateSilentTime()));
+                instance.StartCoroutine(instance.startSong(i, true, instance.calculateSilentTime()));
             }
         }
     }
@@ -148,8 +148,10 @@ public class SongManager : MonoBehaviour {
     float calculateSilentTime() {
         float shortestTime = 100;
         for(int i = 0; i < GameManager.getCurLevel() + 1; i++) {
-            float nextTime = Mathf.Abs(time[i][0] - time[i][1]);
-            if(nextTime < shortestTime) shortestTime = nextTime;
+            if(time[i].Count > 1) {
+                float nextTime = Mathf.Abs(time[i][0] - time[i][1]);
+                if(nextTime < shortestTime) shortestTime = nextTime;
+            }
         }
         return shortestTime;
     }

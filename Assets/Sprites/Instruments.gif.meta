@@ -1,11 +1,11 @@
 fileFormatVersion: 2
 guid: 9f27dc070302b634ebda836fff633b69
-timeCreated: 1474881378
+timeCreated: 1475044251
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Instruments_0
-    21300002: Instruments_1
+    21300000: CollectableViolin
+    21300002: CollectableFlute
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -55,7 +55,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Instruments_0
+      name: CollectableViolin
       rect:
         serializedVersion: 2
         x: 11
@@ -68,7 +68,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Instruments_1
+      name: CollectableFlute
       rect:
         serializedVersion: 2
         x: 357

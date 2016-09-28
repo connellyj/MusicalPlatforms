@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
     bool seenByCamera;
     bool facingRight;
 
-    float moveForce = 150f;
+    float moveForce = 50f;
     float maxSpeed = 3f;
     float jumpForce = 325f;
     float babyJumpForce = 105f;
